@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="UniWeaver is a structured, model-agnostic harness that plans, generates, and verifies interleaved text-image responses with unified multimodal models." />
+    <meta name="theme-color" content="#091713" />
+    <meta property="og:title" content="UniWeaver: Harnessing Unified Multimodal Models for Interleaved Text-Image Generation" />
+    <meta property="og:description" content="A model-agnostic harness that plans content units, generates interleaved text-image responses, and repairs failed images locally." />
+    <meta property="og:image" content="assets/images/og-card.jpg" />
+    <meta name="citation_title" content="UniWeaver: Harnessing Unified Multimodal Models for Interleaved Text-Image Generation" />
+    <title>UniWeaver: Harnessing Unified Multimodal Models for Interleaved Text-Image Generation</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <script>document.documentElement.classList.add("js");</script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" id="top">
+      <div class="reading-progress" aria-hidden="true"><span data-reading-progress></span></div>
+      <nav class="nav shell" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="UniWeaver home">
+          <span>UniWeaver</span>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
+          <span></span><span></span>
+          <span class="sr-only">Toggle navigation</span>
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="#overview">Overview</a>
+          <a href="#paradigm">Paradigm</a>
+          <a href="#method">Method</a>
+          <a href="#data">Data &amp; Eval</a>
+          <a href="#results">Results</a>
+          <a href="#figures">Qualitative</a>
+          <a href="#cite">Cite</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="hero-aurora hero-aurora-a" aria-hidden="true"></div>
+        <div class="hero-aurora hero-aurora-b" aria-hidden="true"></div>
+        <div class="hero-grid-pattern" aria-hidden="true"></div>
+        <div class="shell hero-layout">
+          <div class="hero-content">
+            <h1 class="reveal">UniWeaver: Harnessing Unified Multimodal Models for <span>Interleaved Text-Image Generation</span></h1>
+            <p class="hero-name reveal">
+              We propose <strong>UniWeaver</strong>, a structured, model-agnostic
+              harness framework that integrates multimodal planning, generation,
+              and visual feedback to produce coherent interleaved outputs.
+            </p>
+            <div class="hero-actions reveal">
+              <button class="button button-primary" type="button" disabled aria-label="arXiv preprint, link coming soon">
+                Paper
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" /></svg>
+              </button>
+              <a
+                class="button button-quiet"
+                href="https://github.com/Poscape/UniWeaver"
+                target="_blank"
+                rel="noopener"
+              >
+                Code
+              </a>
+              <a
+                class="button button-quiet"
+                href="https://huggingface.co/datasets/poscape/UniWeaver-Bench"
+                target="_blank"
+                rel="noopener"
+              >
+                Benchmark
+              </a>
+              <a
+                class="button button-quiet"
+                href="https://huggingface.co/datasets/poscape/UniWeaver-10K"
+                target="_blank"
+                rel="noopener"
+              >
+                Dataset
+              </a>
+            </div>
+            <div class="hero-meta reveal">
+              <span>Hongxu Chen<sup>*</sup>, Zixuan Zhong<sup>*</sup>, Donghao Zhou<sup>*†</sup>, Haodong Li, Xiaomin Yu, Tianhao Li, Shiyao Yu, Zhongwei Wan<sup>§</sup>, Pheng-Ann Heng<sup>§</sup></span>
+              <span><sup>*</sup> Equal contribution · <sup>†</sup> Project lead · <sup>§</sup> Corresponding author</span>
+              <span>OSU · UCL · CUHK · HKUST (GZ) · HKU</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="overview">
+        <div class="shell split-heading">
+          <div class="section-kicker reveal">Overview</div>
+          <div>
+            <h2 class="reveal">Problem setting and contributions</h2>
+            <p class="lead reveal">
+              UMMs can both understand and generate, but they do not reliably
+              coordinate a complete interleaved response. A coarse request still
+              leaves the endpoint, number of units, and division between prose and
+              visuals unspecified.
+            </p>
+          </div>
+        </div>
+
+        <div class="shell hero-showcase paper-figure reveal">
+          <div class="showcase-topline">
+            <div class="flow-label"><i></i> Plan</div>
+            <div class="flow-line"></div>
+            <div class="flow-label"><i></i> Generate</div>
+            <div class="flow-line"></div>
+            <div class="flow-label"><i></i> Verify</div>
+            <span class="showcase-note">Generated with UniWeaver</span>
+          </div>
+          <button
+            class="image-button hero-image-button zoom-trigger"
+            type="button"
+            data-image="assets/svg/final_teaser.svg"
+            aria-label="Open the UniWeaver results figure"
+          >
+            <picture>
+              <img src="assets/svg/final_teaser.svg" width="3156" height="1729" decoding="async" alt="A grid of UniWeaver outputs for maintenance, catalog, recipe, photography, product-guide, and clothing tasks." />
+            </picture>
+            <span class="zoom-hint">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="4.5" /><path d="m12 12 4 4M8.5 6.5v4M6.5 8.5h4" /></svg>
+              <span>Open figure</span>
+            </span>
+          </button>
+          <div class="figure-caption showcase-caption">
+            <p>Six task families, one response each. Every unit pairs reader-facing prose with its own generated image, so a response can be read end to end.</p>
+          </div>
+        </div>
+
+        <div class="shell intro-grid">
+          <article class="abstract-card reveal">
+            <p>
+              Unified multimodal models (UMMs) have opened up new possibilities
+              for generating rich interleaved text-image content. However, they
+              generally lack native support for coordinating the two modalities,
+              and translating coarse user requests into coherent multimodal
+              compositions also requires explicit planning. We propose
+              <strong>UniWeaver</strong>, a structured, model-agnostic harness
+              framework that integrates multimodal planning, generation, and
+              visual feedback to produce coherent interleaved outputs. To train
+              UMMs for this task, we construct <strong>UniWeaver-10K</strong>, a
+              dataset of 10,000 tasks across 20 task families, paired with
+              execution trajectories guided by UniWeaver. We also introduce
+              <strong>UniWeaver-Bench</strong>, a task-oriented benchmark
+              systematically assessing text coverage, writing quality, visual
+              coverage, and image-text alignment. Experiments show that UniWeaver
+              achieves state-of-the-art performance and improves interleaved
+              text-image generation across multiple UMM backbones.
+            </p>
+          </article>
+          <div class="contribution-stack">
+            <article class="contribution-card reveal">
+              <span class="number">01</span>
+              <div>
+                <h3>Model-agnostic harness</h3>
+                <p>
+                  Four planning stages turn a request into typed units, prompts,
+                  references and checks. Only an image that fails its check is
+                  regenerated, and no backbone parameter is updated.
+                </p>
+              </div>
+            </article>
+            <article class="contribution-card reveal">
+              <span class="number">02</span>
+              <div>
+                <h3>UniWeaver-10K</h3>
+                <p>
+                  10,000 goal-only tasks across 20 families, 500 per family, supervised
+                  at the plan level: no generated pixels and no explicit chain-of-thought
+                  as training targets.
+                </p>
+              </div>
+            </article>
+            <article class="contribution-card reveal">
+              <span class="number">03</span>
+              <div>
+                <h3>UniWeaver-Bench</h3>
+                <p>
+                  120 held-out tasks, 6 per family, scored on text coverage,
+                  writing quality, visual coverage and image-text alignment, with
+                  output validity entering each family score.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-tinted" id="paradigm">
+        <div class="shell paradigm-layout">
+          <div class="paradigm-copy reveal">
+            <div class="section-kicker">Paradigm</div>
+            <h2>Sequential generation versus plan-first coordination</h2>
+            <p>
+              Sequential pipelines make each new unit depend on earlier outputs,
+              even when the units are unrelated. UniWeaver fixes scope and modality
+              roles first. Each image is generated from its own plan, and only
+              failed units are retried.
+            </p>
+          </div>
+          <div class="figure-card reveal">
+            <button
+              class="image-button zoom-trigger"
+              type="button"
+              data-image="assets/svg/final_paradigm_3.svg"
+              aria-label="Open the paradigm comparison figure"
+            >
+              <picture>
+                <img src="assets/svg/final_paradigm_3.svg" width="2400" height="890" loading="lazy" decoding="async" alt="Side-by-side diagrams contrasting sequential generation with UniWeaver's planner, generator, verifier, and local repair loop." />
+              </picture>
+              <span class="zoom-hint">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="4.5" /><path d="m12 12 4 4M8.5 6.5v4M6.5 8.5h4" /></svg>
+                <span>Open figure</span>
+              </span>
+            </button>
+            <div class="figure-caption">
+            <p>In sequential generation each unit is conditioned on the previous output, so an early mistake carries forward; UniWeaver checks each generated image by default and regenerates only the ones that fail.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="method">
+        <div class="shell section-heading reveal">
+          <div>
+            <div class="section-kicker">Method</div>
+            <h2>Four-stage planning with local visual repair</h2>
+          </div>
+          <p>
+            P1 sets scope, P2 separates prose from image prompts, P3 routes
+            reusable references, and P4 defines observable checks. The model then
+            renders each unit and repairs only images that fail a check.
+          </p>
+        </div>
+
+        <div class="shell pipeline reveal" aria-label="UniWeaver workflow">
+          <article class="pipeline-step is-active" data-stage="0">
+            <span class="pipeline-index">P1</span>
+            <div class="pipeline-icon">
+              <svg class="lucide lucide-scan" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /></svg>
+            </div>
+            <h3>Scope</h3>
+            <p>Title, endpoint, and each unit's visual subject and content goal.</p>
+          </article>
+          <article class="pipeline-step" data-stage="1">
+            <span class="pipeline-index">P2</span>
+            <div class="pipeline-icon">
+              <svg class="lucide lucide-file-image" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><circle cx="10" cy="12" r="2" /><path d="m20 17-1.296-1.296a2.41 2.41 0 0 0-3.408 0L9 22" /></svg>
+            </div>
+            <h3>Text &amp; Image</h3>
+            <p>Reader-facing prose, image prompts, and one shared visual style.</p>
+          </article>
+          <article class="pipeline-step" data-stage="2">
+            <span class="pipeline-index">P3</span>
+            <div class="pipeline-icon">
+              <svg class="lucide lucide-images" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 22H4a2 2 0 0 1-2-2V6" /><path d="m22 13-1.296-1.296a2.41 2.41 0 0 0-3.408 0L11 18" /><circle cx="12" cy="8" r="2" /><rect width="16" height="16" x="6" y="2" rx="2" /></svg>
+            </div>
+            <h3>References</h3>
+            <p>An optional bank of at most two reusable references, routed only to the units that need them.</p>
+          </article>
+          <article class="pipeline-step" data-stage="3">
+            <span class="pipeline-index">P4</span>
+            <div class="pipeline-icon">
+              <svg class="lucide lucide-clipboard-check" viewBox="0 0 24 24" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="m9 14 2 2 4-4" /></svg>
+            </div>
+            <h3>Checklist</h3>
+            <p>
+              One or two observable checks per image, phrased so a reader could
+              confirm them by looking, for example whether the finished dish is
+              plated.
+            </p>
+          </article>
+        </div>
+
+        <p class="shell pipeline-note reveal">
+          <span>Execution</span>
+          Generate each image → check it against its checklist → regenerate only failures,
+          with at most two retries per image.
+        </p>
+
+        <div class="shell framework-grid">
+          <div class="framework-figure reveal">
+            <button
+              class="image-button zoom-trigger"
+              type="button"
+              data-image="assets/svg/final_framework_3.svg"
+              aria-label="Open the full UniWeaver framework figure"
+            >
+              <picture>
+                <img loading="lazy" decoding="async" src="assets/svg/final_framework_3.svg" width="4388" height="2193" alt="The UniWeaver framework, four planning stages, local verification, the UniWeaver-10K dataset pipeline, and UniWeaver-Bench scoring." />
+              </picture>
+              <span class="zoom-hint">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="4.5" /><path d="m12 12 4 4M8.5 6.5v4M6.5 8.5h4" /></svg>
+                <span>Open figure</span>
+              </span>
+            </button>
+            <div class="figure-caption">
+              <p>Planning, local repair, dataset construction, and output-level evaluation in one framework.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-dark" id="data">
+        <div class="shell section-heading reveal">
+          <div>
+            <div class="section-kicker">Data &amp; evaluation</div>
+            <h2>Goal-only supervision and output-level evaluation</h2>
+          </div>
+          <p>
+            Each training request gives only a goal. The model has to infer the
+            unit count, order, and text-image split. The benchmark holds out 120
+            tasks from training and scores the completed response, not its
+            internal plan.
+          </p>
+        </div>
+
+        <div class="shell data-summary">
+          <article class="data-stat reveal">
+            <strong>10,000</strong>
+            <span>goal-only training trajectories</span>
+          </article>
+          <article class="data-stat reveal">
+            <strong>20</strong>
+            <span>balanced task families</span>
+          </article>
+          <article class="data-stat reveal">
+            <strong>120</strong>
+            <span>held-out benchmark tasks</span>
+          </article>
+        </div>
+
+        <div class="shell data-figure reveal">
+          <button
+            class="image-button zoom-trigger"
+            type="button"
+            data-image="assets/svg/final_dataset_statistics.svg"
+            aria-label="Open the dataset statistics figure"
+          >
+            <picture>
+              <img loading="lazy" decoding="async" src="assets/svg/final_dataset_statistics.svg" width="2712" height="956" alt="Three dataset statistics panels: task family distribution, sample length histogram, and corpus vocabulary word cloud." />
+            </picture>
+            <span class="zoom-hint">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="4.5" /><path d="m12 12 4 4M8.5 6.5v4M6.5 8.5h4" /></svg>
+              <span>Open figure</span>
+            </span>
+          </button>
+          <div class="figure-caption figure-caption-inset">
+            <p>Task distribution for both datasets; sample length and corpus vocabulary for UniWeaver-10K.</p>
+          </div>
+        </div>
+
+        <div class="shell evaluation-grid">
+          <article class="evaluation-card reveal">
+            <span class="card-label">Dataset construction</span>
+            <div class="construction-flow">
+              <span>30K+ candidates</span><i>→</i><span>Schema and consistency filters</span><i>→</i><span>10K trajectories</span>
+            </div>
+            <p>
+              More than 30K goal-only candidates are screened for family
+              consistency, naturalness, multimodal usefulness, format validity,
+              and duplicate content. The final 10K set has 500 trajectories per family
+              and a roughly 1:2:1 split across easy, medium, and hard.
+            </p>
+            <p>
+              Supervision covers planning outputs only. Generated pixels and
+              explicit chain-of-thought are not training targets. Each
+              trajectory follows the same four-stage schema used at inference,
+              and later stages condition on earlier decisions.
+            </p>
+          </article>
+          <article class="evaluation-card reveal">
+            <span class="card-label">Evaluation protocol</span>
+            <div class="criteria-list">
+              <div><span>Text coverage</span><strong>45%</strong></div>
+              <div><span>Writing quality</span><strong>10%</strong></div>
+              <div><span>Visual coverage</span><strong>35%</strong></div>
+              <div><span>Image-text alignment</span><strong>10%</strong></div>
+            </div>
+            <p>
+              The 120 held-out tasks cover four categories and six tasks per
+              family. Each task supplies only a goal and hidden references. A
+              response is valid only when it contains ordered text-image units,
+              each pairing reader-facing text with an existing, non-reused image.
+            </p>
+            <p class="formula-note">
+              Each criterion is rated not met, partial, or met (0, 0.5, or 1).
+              For every criterion, three judges each make two ratings at
+              temperature 0, and the median is kept within each judge. A one-tier
+              disagreement uses the lower tier. A disagreement spanning more than
+              one tier scores zero. The family score is
+              <math class="formula" display="inline"><msub><mi>S</mi><mi>f</mi></msub><mo>=</mo><msub><mover><mi>Q</mi><mo>&#175;</mo></mover><mi>f</mi></msub><msqrt><msub><mi>r</mi><mi>f</mi></msub></msqrt></math>,
+              where <math class="formula"><mover><mi>Q</mi><mo>&#175;</mo></mover></math>
+              is quality on valid outputs and
+              <math class="formula"><msub><mi>r</mi><mi>f</mi></msub></math>
+              is the gate pass rate. The total is the mean of the 20 family
+              scores.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="results">
+        <div class="shell section-heading reveal">
+          <div>
+            <div class="section-kicker">Results</div>
+            <h2>Main results and ablations</h2>
+          </div>
+            <p>
+              The harness adds 31.2 points on BAGEL (27.7 → 58.9), 24.8 on
+              OmniGen2 (27.9 → 52.7), and 21.3 on TokenFlow (39.2 → 60.5), with
+            no parameter updates. Fine-tuning BAGEL on UniWeaver-10K lifts
+              the same harness to 87.1, a further 28.2 points from adapting only
+              the understanding decoder with LoRA while the image experts and
+              vision encoder stay frozen.
+            </p>
+        </div>
+
+        <div class="shell chart-layout">
+          <div class="score-chart reveal" aria-label="Total benchmark score comparison">
+            <div class="chart-head">
+              <span>Method</span>
+              <span>Total score</span>
+            </div>
+            <div class="chart-group">
+              <span class="chart-group-label">BAGEL</span>
+              <div class="chart-row">
+                <span class="chart-model">Baseline</span>
+                <div class="chart-track"><i class="bar-base" data-score="27.7"></i></div>
+                <strong>27.7</strong>
+              </div>
+              <div class="chart-row">
+                <span class="chart-model">UniWeaver</span>
+                <div class="chart-track"><i class="bar-ours" data-score="58.9"></i></div>
+                <strong>58.9</strong>
+              </div>
+              <div class="chart-row">
+                <span class="chart-model">UniWeaver-SFT</span>
+                <div class="chart-track"><i class="bar-sft" data-score="87.1"></i></div>
+                <strong>87.1</strong>
+              </div>
+            </div>
+            <div class="chart-group">
+              <span class="chart-group-label">OmniGen2</span>
+              <div class="chart-row">
+                <span class="chart-model">Baseline</span>
+                <div class="chart-track"><i class="bar-base" data-score="27.9"></i></div>
+                <strong>27.9</strong>
+              </div>
+              <div class="chart-row">
+                <span class="chart-model">UniWeaver</span>
+                <div class="chart-track"><i class="bar-ours" data-score="52.7"></i></div>
+                <strong>52.7</strong>
+              </div>
+            </div>
+            <div class="chart-group">
+              <span class="chart-group-label">TokenFlow</span>
+              <div class="chart-row">
+                <span class="chart-model">Baseline</span>
+                <div class="chart-track"><i class="bar-base" data-score="39.2"></i></div>
+                <strong>39.2</strong>
+              </div>
+              <div class="chart-row">
+                <span class="chart-model">UniWeaver</span>
+                <div class="chart-track"><i class="bar-ours" data-score="60.5"></i></div>
+                <strong>60.5</strong>
+              </div>
+            </div>
+            <p class="chart-note">
+              Total score runs from 0 to 100. Baseline is a minimal step-wise harness.
+              UniWeaver applies the harness without parameter updates.
+              UniWeaver-SFT is the full harness on a BAGEL checkpoint fine-tuned
+              on UniWeaver-10K.
+            </p>
+          </div>
+
+          <div class="metric-table-wrap reveal">
+            <div class="table-title">
+              <span>BAGEL</span>
+              <span>Baseline</span>
+              <span>UniWeaver</span>
+              <span>SFT</span>
+            </div>
+            <div class="metric-row">
+              <span>Text coverage</span><strong>21.4</strong><strong>48.9</strong><strong class="best">82.0</strong>
+            </div>
+            <div class="metric-row">
+              <span>Writing quality</span><strong>8.3</strong><strong>89.4</strong><strong class="best">97.9</strong>
+            </div>
+            <div class="metric-row">
+              <span>Visual coverage</span><strong>45.3</strong><strong>64.8</strong><strong class="best">91.4</strong>
+            </div>
+            <div class="metric-row">
+              <span>Image-text alignment</span><strong>14.0</strong><strong>52.5</strong><strong class="best">83.7</strong>
+            </div>
+            <p class="table-note">
+              BAGEL criterion scores use a 0 to 100 scale. Higher is better.
+              SFT = UniWeaver-SFT.
+            </p>
+          </div>
+        </div>
+
+        <div class="shell ablation-grid">
+          <div class="ablation-copy reveal">
+            <div class="section-kicker">Ablation</div>
+            <h3>Component ablations</h3>
+            <p>
+              Removing the task goal costs 5.88 points. Removing the shared visual
+              style costs 10.68, and merging prose with image prompts costs 5.41.
+              Reference choices contribute 0.41 to 1.21 points.
+            </p>
+          </div>
+          <div class="ablation-table reveal">
+            <div class="ablation-row header"><span>Variant</span><span>Total</span><span>Δ</span></div>
+            <div class="ablation-row featured"><span>Full method</span><strong>58.89</strong><strong>n/a</strong></div>
+            <div class="ablation-row"><span>w/o Shared Visual Style</span><span>48.21</span><strong class="negative">−10.68</strong></div>
+            <div class="ablation-row"><span>w/o Task Goal</span><span>53.01</span><strong class="negative">−5.88</strong></div>
+            <div class="ablation-row"><span>w/ Merged Image Prompt and Content</span><span>53.48</span><strong class="negative">−5.41</strong></div>
+            <div class="ablation-row"><span>w/o Per-step Content Goal</span><span>55.56</span><strong class="negative">−3.33</strong></div>
+            <div class="ablation-row"><span>References Fixed before the Text</span><span>57.68</span><strong class="negative">−1.21</strong></div>
+            <div class="ablation-row"><span>w/o Per-step Reference Routing</span><span>57.89</span><strong class="negative">−1.00</strong></div>
+            <div class="ablation-row"><span>w/o All Reference Images</span><span>58.48</span><strong class="negative">−0.41</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-tinted" id="figures">
+        <div class="shell section-heading reveal">
+          <div>
+            <div class="section-kicker">Qualitative results</div>
+            <h2>Qualitative comparison on three tasks</h2>
+          </div>
+          <p>
+            One row per system. Read across a row to compare coverage,
+            repetition, and how each system renders text and images.
+          </p>
+        </div>
+
+        <div class="shell gallery-stack">
+          <article class="task-switcher reveal" data-current-task="packing">
+            <div class="task-switcher-head">
+              <div>
+                <span class="card-label">Interactive case study</span>
+                <h3>Evaluated tasks</h3>
+              </div>
+              <div class="task-tabs" aria-label="Qualitative task">
+                <button class="task-tab is-active" type="button" aria-pressed="true" data-task="packing">
+                  Workshop packing
+                </button>
+                <button class="task-tab" type="button" aria-pressed="false" data-task="cooking">
+                  Beginner cooking
+                </button>
+                <button class="task-tab" type="button" aria-pressed="false" data-task="architecture">
+                  Community music hall
+                </button>
+              </div>
+            </div>
+            <button
+              class="image-button zoom-trigger task-viewport"
+              type="button"
+              data-image="assets/svg/qualitative-packing.svg"
+              aria-label="Open the current qualitative comparison in full resolution"
+            >
+              <img class="task-sheet is-active" src="assets/svg/qualitative-packing.svg" width="1655" height="509" loading="lazy" decoding="async" alt="Packing comparison across BAGEL, OmniGen2, Janus-Pro, and UniWeaver." />
+              <img class="task-sheet" src="assets/svg/qualitative-cooking.svg" width="1655" height="494" loading="lazy" decoding="async" alt="Cooking comparison across BAGEL, OmniGen2, ILLUME+, and UniWeaver." />
+              <img class="task-sheet" src="assets/svg/final_appendix_fig.svg" width="1339" height="511" loading="lazy" decoding="async" alt="Community music hall design comparison across BAGEL, TokenFlow, ILLUME+, and UniWeaver." />
+              <span class="zoom-hint">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="4.5" /><path d="m12 12 4 4M8.5 6.5v4M6.5 8.5h4" /></svg>
+                <span>Open figure</span>
+              </span>
+            </button>
+            <div class="task-switcher-foot">
+              <p data-task-copy aria-live="polite">
+                BAGEL adds irrelevant accessories, OmniGen2 repeats checklist
+                images, and Janus-Pro produces illegible in-image text. UniWeaver
+                keeps clothing and equipment advice tied to a distinct image for
+                each unit.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section-dark cite-section" id="cite">
+        <div class="shell cite-grid">
+          <div class="cite-copy reveal">
+            <div class="section-kicker">Citation</div>
+            <h2>UniWeaver</h2>
+            <p>
+              If you build on UniWeaver, please cite the paper.
+            </p>
+            <div class="resource-links">
+              <a href="#" aria-disabled="true">arXiv link coming soon</a>
+            </div>
+          </div>
+          <div class="bibtex-card reveal">
+            <div class="bibtex-head">
+              <span>BibTeX</span>
+              <button class="copy-button" type="button" data-copy-target="bibtex">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="6" y="6" width="10" height="10" rx="2" /><path d="M4 12V5a1 1 0 0 1 1-1h7" /></svg>
+                <span>Copy</span>
+              </button>
+            </div>
+          <pre id="bibtex"><code>@article{chen2026uniweaver,
+  title   = {UniWeaver: Harnessing Unified Multimodal
+             Models for Interleaved Text-Image Generation},
+  author  = {Hongxu Chen and Zixuan Zhong and Donghao Zhou
+             and Haodong Li and Xiaomin Yu and Tianhao Li
+             and Shiyao Yu and Zhongwei Wan and Pheng-Ann Heng},
+  year    = {2026},
+  note    = {Project page}
+}</code></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="shell footer-inner">
+        <div>
+          <a class="brand footer-brand" href="#top">
+            <span>UniWeaver</span>
+          </a>
+          <p>A structured harness for interleaved text-image generation.</p>
+        </div>
+      </div>
+    </footer>
+
+    <button class="back-to-top" type="button" data-back-to-top aria-label="Back to top">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 12.5 10 6l6 6.5" /></svg>
+    </button>
+
+    <dialog class="lightbox" id="image-lightbox" aria-label="Figure preview">
+      <div class="lightbox-shell">
+        <button class="icon-button lightbox-close" type="button" data-close-lightbox aria-label="Close figure">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" /></svg>
+        </button>
+        <div class="lightbox-image-wrap">
+          <img id="lightbox-image" src="" alt="" />
+        </div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="copy-toast" role="status" aria-live="polite">BibTeX copied</div>
+    <script src="script.js"></script>
+  </body>
+</html>

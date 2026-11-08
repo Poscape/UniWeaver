@@ -1,0 +1,32 @@
+{
+  "name": "lora-full-native-40000-lr5e-5",
+  "description": "Native 40000-step text SFT; PEFT LoRA on the complete text/understanding decoder path (all 28 layers, attention and MLP projections outside the generation-only MoT experts), rank 32, alpha 64, dropout 0.05. One launch from step 0 over 2 epochs (20000 steps/epoch) with a single cosine schedule from the 200-step warm-up to step 40000.",
+  "training_mode": "lora",
+  "epochs": 2.0,
+  "learning_rate": 5e-05,
+  "warmup_steps": 200,
+  "max_grad_norm": 1.0,
+  "max_seq_len": 4096,
+  "pack_samples": 2,
+  "checkpoint_every": 2000,
+  "keep_checkpoints": 3,
+  "keep_checkpoint_steps": [
+    20000,
+    30000,
+    40000
+  ],
+  "keep_best_ce_steps": 2,
+  "lora_rank": 32,
+  "lora_alpha": 64,
+  "lora_dropout": 0.05,
+  "adamw_betas": [
+    0.9,
+    0.95
+  ],
+  "adamw_eps": 1e-08,
+  "adamw_weight_decay": 0.01,
+  "seed": 42,
+  "total_steps": 40000,
+  "dataset": "UniWeaver-10K trajectories (10000 x 4 plan-stage = 40000 samples)",
+  "checkpoint_selection": "Retained points are pinned by step (keep_checkpoint_steps) plus the trailing best-CE points (keep_best_ce_steps). model.pt is written after merge_and_unload so it stays a plain text-model state_dict; the pinned step_*.pt files stay in raw LoRA form because they are resume-capable."
+}

@@ -1,0 +1,23 @@
+# Shared Python dependencies for inference, evaluation, training, and tests.
+#
+# Target Python 3.10 or 3.11 inside the environment of the backbone you run.
+# PyTorch, torchvision, the CUDA libraries, and FlashAttention are not listed
+# here because each backbone needs its own build. Install them following that
+# backbone's official instructions first, then install this file into the same
+# environment. A plain "pip install torch" can give you a CPU-only build that
+# will not run these models.
+accelerate>=0.34,<2
+einops==0.8.1
+numpy==1.24.4
+openai>=1.66,<3
+opencv-python==4.7.0.72
+packaging>=23
+peft==0.20.0
+Pillow>=9,<12
+pytest>=7,<9
+regex>=2024.0,<2027
+ruff>=0.6,<1
+safetensors==0.4.5
+sentencepiece==0.1.99
+tqdm>=4.66,<5
+transformers==4.49.0

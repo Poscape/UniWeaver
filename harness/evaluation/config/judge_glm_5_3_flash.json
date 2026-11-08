@@ -1,0 +1,24 @@
+{
+  "provider": "chat_completions",
+  "base_url_env": "UMM_JUDGE_GLM_BASE_URL",
+  "api_key_env": "UMM_JUDGE_GLM_API_KEY",
+  "request_path": "/chat/completions",
+  "timeout_seconds": 600,
+  "max_retries": 3,
+  "text_judge": {
+    "label": "glm-5.3-flash",
+    "model": "glm-5.3-flash",
+    "temperature": 0,
+    "max_tokens": 16384,
+    "json_mode": true
+  },
+  "vision_judge": {
+    "label": "glm-5.3-flash",
+    "model": "glm-5.3-flash",
+    "temperature": 0,
+    "max_tokens": 16384,
+    "json_mode": true,
+    "max_images_per_task": 8,
+    "image_detail": "high"
+  }
+}

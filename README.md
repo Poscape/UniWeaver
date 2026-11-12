@@ -4,7 +4,7 @@
 
 [![Project Page](https://img.shields.io/badge/Project%20Page-Website-6C4CE0?labelColor=2B2F36)](https://poscape.github.io/UniWeaver/)
 [![Code](https://img.shields.io/badge/Code-GitHub-1F6FEB?labelColor=2B2F36&logo=github&logoColor=white)](https://github.com/Poscape/UniWeaver)
-![Paper](https://img.shields.io/badge/Paper-arXiv%20coming%20soon-B31D28?labelColor=2B2F36)
+[![Paper](https://img.shields.io/badge/Paper-arXiv-B31D28?labelColor=2B2F36)](https://arxiv.org/abs/2611.13530)
 [![Benchmark](https://img.shields.io/badge/Benchmark-UniWeaver--Bench-E8734A?labelColor=2B2F36&logo=huggingface&logoColor=white)](https://huggingface.co/datasets/poscape/UniWeaver-Bench)
 [![Dataset](https://img.shields.io/badge/Dataset-UniWeaver--10K-4F8A3D?labelColor=2B2F36&logo=huggingface&logoColor=white)](https://huggingface.co/datasets/poscape/UniWeaver-10K)
 

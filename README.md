@@ -291,13 +291,13 @@ files retain their own licenses and usage terms.
 ## 🔗 Citation
 
 ```bibtex
-@article{chen2026uniweaver,
-  title   = {UniWeaver: Harnessing Unified Multimodal
-             Models for Interleaved Text-Image Generation},
-  author  = {Hongxu Chen and Zixuan Zhong and Donghao Zhou
-             and Haodong Li and Xiaomin Yu and Tianhao Li
-             and Shiyao Yu and Zhongwei Wan and Pheng-Ann Heng},
-  year    = {2026},
-  note    = {Project page}
+@misc{chen2026uniweaverharnessingunifiedmultimodal,
+  title         = {UniWeaver: Harnessing Unified Multimodal Models for Interleaved Text-Image Generation},
+  author        = {Hongxu Chen and Zixuan Zhong and Donghao Zhou and Haodong Li and Xiaomin Yu and Tianhao Li and Shiyao Yu and Zhongwei Wan and Pheng-Ann Heng},
+  year          = {2026},
+  eprint        = {2611.13530},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url           = {https://arxiv.org/abs/2611.13530}
 }
 ```
